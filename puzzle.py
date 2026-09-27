@@ -107,3 +107,53 @@ class Puzzle:
         self.moves = 0
         self.selected_index = None
         self.completed = True
+
+        
+class Transformation:
+    """Base class for puzzle transformations."""
+
+    def __init__(self, target_index):
+        self.target_index = target_index
+
+    def apply(self, puzzle):
+        raise NotImplementedError("Subclasses must implement apply().")
+
+
+class RotateTransformation(Transformation):
+    """Rotates one tile."""
+
+    def __init__(self, target_index, angle):
+        super().__init__(target_index)
+        self.angle = angle
+
+    def apply(self, puzzle):
+        puzzle.tiles[self.target_index].rotate(self.angle)
+
+
+class FlipTransformation(Transformation):
+    """Flips one tile."""
+
+    def __init__(self, target_index, direction):
+        super().__init__(target_index)
+        self.direction = direction
+
+    def apply(self, puzzle):
+        if self.direction == "horizontal":
+            puzzle.tiles[self.target_index].flip_horizontal()
+
+        elif self.direction == "vertical":
+            puzzle.tiles[self.target_index].flip_vertical()
+
+
+class SwapTransformation(Transformation):
+    """Swaps two tiles."""
+
+    def __init__(self, target_index, partner_index):
+        super().__init__(target_index)
+        self.partner_index = partner_index
+
+    def apply(self, puzzle):
+        puzzle.swap_tiles(
+            self.target_index,
+            self.partner_index
+        )
